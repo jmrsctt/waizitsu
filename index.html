@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Little Something For You</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
+<style>
+  /* ====== EDIT THESE TWO LINES TO PERSONALIZE ====== */
+  :root{
+    --her-name: " Babyyy Kikayyy!!";                 /* her name */
+    --date-idea: "a date, bebetime, and no phones — just us."; /* the date you're proposing */
+  }
+
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500;1,600&family=Jost:wght@300;400;500&display=swap');
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  :root{
+    --cream:#FDF1E7;
+    --blush:#F6C9D6;
+    --rose:#E8A0B4;
+    --plum:#8A2E45;
+    --plum-deep:#5C1A2C;
+    --gold:#D9A544;
+    --lavender:#F9DCE3;
+    --night-top:#3B1626;
+    --night-bottom:#8A3352;
+    --capiz:#FBEFE0;
+  }
+
+  html,body{
+    height:100%;
+    background: linear-gradient(160deg, var(--cream) 0%, var(--blush) 55%, var(--lavender) 100%);
+    font-family:'Jost', sans-serif;
+    color: var(--plum-deep);
+    overflow-x:hidden;
+    scroll-behavior:smooth;
+  }
+
+  .serif{ font-family:'Cormorant Garamond', serif; }
+
+  /* ---------- petals ---------- */
+  #petal-field{
+    position:fixed; inset:0; pointer-events:none; z-index:2; overflow:hidden;
+  }
+  .petal{
+    position:absolute; top:-40px; opacity:0.85; will-change:transform;
+    animation-name: fall; animation-timing-function: linear; animation-iteration-count: infinite;
+  }
+  @keyframes fall{
+    0%   { transform: translate(0,0) rotate(0deg); }
+    100% { transform: translate(var(--drift, 40px), 110vh) rotate(360deg); }
+  }
+
+  /* ---------- falling couple-photo polaroids ---------- */
+  .polaroid{
+    position:absolute; top:-260px; will-change:transform;
+    background:#fffdf9; padding:7px 7px 20px; border-radius:4px;
+    box-shadow:0 10px 26px rgba(107,68,87,0.28);
+    animation-name: fall-photo; animation-timing-function: linear; animation-iteration-count: infinite;
+  }
+  .polaroid img{
+    display:block; width:100%; height:100%; object-fit:cover; border-radius:2px;
+  }
+  @keyframes fall-photo{
+    0%   { transform: translate(0,0) rotate(var(--rot-start, -6deg)); }
+    100% { transform: translate(var(--drift, 30px), 130vh) rotate(var(--rot-end, 8deg)); }
+  }
+
+
+  section{
+    position:relative; min-height:100vh; width:100%;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; padding: 8vh 6vw; z-index:5;
+  }
+
+  /* ---------- SCENE 1: envelope / harana night scene ---------- */
+  #envelope-scene{
+    background: linear-gradient(180deg, var(--night-top) 0%, var(--night-bottom) 75%, var(--rose) 100%);
+    overflow:hidden;
+  }
+  #envelope-scene .hint{
+    font-size:0.95rem; letter-spacing:0.14em; text-transform:uppercase;
+    color: var(--capiz); opacity:0.75; margin-bottom: 40px;
+  }
+  .harana-title{
+    font-family:'Cormorant Garamond', serif; font-style:italic; font-weight:500;
+    font-size: clamp(1.8rem, 5vw, 2.8rem); color:var(--capiz); margin-bottom:10px;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.35);
+  }
+  .harana-sub{
+    font-family:'Cormorant Garamond', serif; font-style:italic; font-size:1.1rem;
+    color: var(--gold); opacity:0.9; margin-bottom:34px;
+  }
+  .moon{
+    position:absolute; top:8%; right:14%; width:90px; height:90px; border-radius:50%;
+    background: radial-gradient(circle at 35% 30%, #fff8ec, var(--gold) 75%);
+    box-shadow: 0 0 60px 18px rgba(217,165,68,0.35);
+  }
+  .stars{ position:absolute; inset:0; }
+  .star{
+    position:absolute; width:3px; height:3px; border-radius:50%; background:var(--capiz);
+    animation: twinkle 3s ease-in-out infinite;
+  }
+  @keyframes twinkle{ 0%,100%{opacity:0.25;} 50%{opacity:0.95;} }
+  .capiz-row{ display:none; } /* replaced by .bunting below */
+
+  /* ---------- hanging flower bunting (top) ---------- */
+  .bunting{
+    position:absolute; top:0; left:0; width:100%; height:86px; z-index:3; pointer-events:none;
+  }
+  .bunting svg{ width:100%; height:100%; display:block; overflow:visible; }
+  .charm{ transform-origin: 50% 0%; animation: swing 3.4s ease-in-out infinite; }
+  @keyframes swing{ 0%,100%{ transform: rotate(-5deg); } 50%{ transform: rotate(5deg); } }
+
+  /* ---------- moonlit garden (bottom) ---------- */
+  .garden{
+    position:absolute; bottom:0; left:0; width:100%; height:22vh; min-height:140px; z-index:1;
+  }
+  .garden svg{ width:100%; height:100%; display:block; }
+  .bloom{ transform-origin:50% 100%; animation: sway 4.5s ease-in-out infinite; }
+  @keyframes sway{ 0%,100%{ transform: rotate(-2.5deg); } 50%{ transform: rotate(2.5deg); } }
+  .firefly{
+    position:absolute; width:5px; height:5px; border-radius:50%; background:var(--gold);
+    box-shadow: 0 0 8px 3px rgba(217,165,68,0.7);
+    animation: float-firefly 6s ease-in-out infinite;
+  }
+  #fireflies{ position:absolute; inset:0; pointer-events:none; z-index:1; }
+  @keyframes float-firefly{
+    0%,100%{ transform: translate(0,0); opacity:0.4; }
+    50%{ transform: translate(14px,-18px); opacity:1; }
+  }
+  .envelope-wrap{ cursor:pointer; user-select:none; }
+  .envelope{
+    position:relative; width:min(78vw,300px); height:min(52vw,200px);
+    background: linear-gradient(135deg,#fffaf6,#f7e7ec);
+    border-radius:6px; box-shadow: 0 20px 50px rgba(107,68,87,0.25);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .envelope::before, .envelope::after{
+    content:""; position:absolute; top:0; width:50%; height:100%;
+    background:#fdf0f3; border:1px solid rgba(107,68,87,0.08);
+  }
+  .flap{
+    position:absolute; top:0; left:0; width:100%; height:100%;
+    clip-path: polygon(0 0, 50% 55%, 100% 0);
+    background: linear-gradient(135deg,#f4d9e0,#e9c3ce);
+    transform-origin: top center; transition: transform 0.9s cubic-bezier(.6,.2,.2,1);
+    z-index:3; border-radius: 6px 6px 0 0;
+  }
+  .envelope-wrap.open .flap{ transform: rotateX(180deg); }
+  .seal{
+    position:absolute; top:44%; left:50%; transform:translate(-50%,-50%);
+    width:54px; height:54px; border-radius:50%;
+    background: radial-gradient(circle at 35% 30%, #e0b578, var(--gold) 70%);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.25); z-index:4;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Cormorant Garamond', serif; font-style:italic; color:#5c4321; font-size:1.3rem;
+    transition: opacity .4s ease, transform .4s ease;
+  }
+  .envelope-wrap.open .seal{ opacity:0; transform: translate(-50%,-50%) scale(0.4); }
+  .envelope-wrap:hover .envelope{ transform: translateY(-4px); transition: transform .3s ease; }
+
+  /* ---------- SCENE 2: letter ---------- */
+  #letter-scene{ display:none; }
+  #letter-scene.visible{ display:flex; animation: fadeUp 1s ease both; }
+  @keyframes fadeUp{ from{ opacity:0; transform:translateY(24px);} to{opacity:1; transform:translateY(0);} }
+  .letter-paper{
+    max-width:560px; background: rgba(255,251,247,0.75); backdrop-filter: blur(4px);
+    border:1px solid rgba(107,68,87,0.12); border-radius:4px;
+    padding: 60px 46px; box-shadow: 0 25px 60px rgba(107,68,87,0.15);
+  }
+  .letter-paper p{
+    font-family:'Cormorant Garamond', serif; font-size:1.5rem; font-style:italic;
+    line-height:1.7; color: var(--plum-deep); margin-bottom: 20px;
+  }
+  .scroll-note{
+    margin-top:36px; font-size:0.85rem; letter-spacing:0.12em; text-transform:uppercase;
+    color:var(--plum); opacity:0.55;
+  }
+  .arrow-down{ margin-top:14px; font-size:1.4rem; animation: bob 1.8s ease-in-out infinite; }
+  @keyframes bob{ 0%,100%{transform:translateY(0);} 50%{transform:translateY(8px);} }
+
+  /* ---------- SCENE 3: the question ---------- */
+  #question-scene h1{
+    font-size: clamp(2.2rem, 6vw, 3.6rem); font-weight:500; font-style:italic;
+    color:var(--plum-deep); margin-bottom:14px;
+  }
+  #question-scene .sub{
+    font-size:1.05rem; color:var(--plum); opacity:0.75; margin-bottom:52px; max-width:480px;
+  }
+  .btn-row{ display:flex; gap:26px; position:relative; height:80px; align-items:center; }
+  .btn{
+    padding:16px 38px; border-radius:40px; border:none; cursor:pointer;
+    font-family:'Jost',sans-serif; font-size:1.05rem; letter-spacing:0.02em;
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  #yes-btn{
+    background: linear-gradient(135deg, var(--plum), var(--plum-deep)); color:#fdf3f6;
+    box-shadow: 0 10px 30px rgba(107,68,87,0.35);
+  }
+  #yes-btn:hover{ transform: scale(1.06); }
+  #no-btn{
+    background: rgba(255,255,255,0.6); color:var(--plum);
+    border:1px solid rgba(107,68,87,0.25); position:relative;
+    transition: left .5s cubic-bezier(.34,1.56,.64,1), top .5s cubic-bezier(.34,1.56,.64,1);
+  }
+  #no-btn.fixed-pos{ position:fixed; z-index:30; }
+  #no-btn.no-pop{ animation: no-btn-pop .5s ease; }
+  @keyframes no-btn-pop{
+    0%{ transform: scale(1) rotate(0deg); }
+    30%{ transform: scale(1.2) rotate(-10deg); }
+    60%{ transform: scale(0.88) rotate(9deg); }
+    100%{ transform: scale(1) rotate(0deg); }
+  }
+
+  /* ---------- SCENE 4: celebration ---------- */
+  #celebration{
+    position:fixed; inset:0; z-index:50; display:none;
+    align-items:center; justify-content:center; text-align:center; flex-direction:column;
+    background: radial-gradient(circle at 50% 40%, rgba(255,255,255,0.92), rgba(246,220,227,0.96));
+    padding: 8vh 6vw;
+  }
+  #celebration.show{ display:flex; animation: fadeUp .8s ease both; }
+  #celebration h1{
+    font-family:'Cormorant Garamond', serif; font-style:italic; font-weight:500;
+    font-size: clamp(2.4rem, 7vw, 4.2rem); color:var(--plum-deep); margin-bottom:20px;
+  }
+  #celebration p{ font-size:1.1rem; color:var(--plum); max-width:480px; line-height:1.6; }
+  #celebration .date-idea{ margin-top:22px; font-style:italic; font-family:'Cormorant Garamond', serif; font-size:1.3rem; }
+
+  /* ---------- date & time picker ---------- */
+  #planner{
+    margin-top:40px; width:100%; max-width:380px;
+    background: rgba(255,255,255,0.6); backdrop-filter: blur(6px);
+    border:1px solid rgba(107,68,87,0.15); border-radius:18px;
+    padding: 30px 28px; box-shadow: 0 15px 40px rgba(107,68,87,0.12);
+  }
+  #planner.hidden{ display:none; }
+  #planner .planner-title{
+    font-family:'Cormorant Garamond', serif; font-style:italic; font-size:1.3rem;
+    margin-bottom:20px; color:var(--plum-deep);
+  }
+  .field-group{ text-align:left; margin-bottom:18px; }
+  .field-group label{
+    display:block; font-size:0.75rem; letter-spacing:0.1em; text-transform:uppercase;
+    color:var(--plum); opacity:0.7; margin-bottom:8px;
+  }
+  .field-group input{
+    width:100%; padding:12px 14px; border-radius:10px;
+    border:1px solid rgba(107,68,87,0.25); background:rgba(255,255,255,0.85);
+    font-family:'Jost',sans-serif; font-size:1rem; color:var(--plum-deep);
+  }
+  .field-group input:focus{ outline:2px solid var(--gold); outline-offset:1px; }
+  #confirm-btn{
+    width:100%; margin-top:8px; background: linear-gradient(135deg, var(--plum), var(--plum-deep));
+    color:#fdf3f6; box-shadow: 0 10px 26px rgba(107,68,87,0.3);
+  }
+  #confirm-btn:hover{ transform: scale(1.03); }
+  .planner-error{
+    color:#a4405a; font-size:0.85rem; margin-top:-6px; margin-bottom:14px; display:none;
+  }
+  .planner-error.show{ display:block; }
+  #planner-success{
+    display:none; font-family:'Cormorant Garamond', serif; font-style:italic; font-size:1.25rem;
+    color:var(--plum-deep); margin-top:6px;
+  }
+  #planner-success.show{ display:block; }
+
+  /* ---------- date receipt ---------- */
+  #receipt-wrap{ display:none; margin-top:28px; width:100%; max-width:340px; }
+  #receipt-wrap.show{ display:block; animation: fadeUp .6s ease both; }
+  #receipt{
+    position:relative;
+    background:#FFFDF8;
+    border: 2px dashed rgba(107,68,87,0.35);
+    border-radius: 4px;
+    padding: 26px 22px 30px;
+    font-family:'Courier New', monospace;
+    color:#3a2230;
+    text-align:left;
+    box-shadow: 0 15px 40px rgba(107,68,87,0.18);
+  }
+  #receipt::after{
+    content:"";
+    position:absolute; left:0; right:0; bottom:-1px; height:12px;
+    background:#FFFDF8;
+    clip-path: polygon(0% 0%, 6% 100%, 12% 0%, 18% 100%, 24% 0%, 30% 100%, 36% 0%, 42% 100%, 48% 0%, 54% 100%, 60% 0%, 66% 100%, 72% 0%, 78% 100%, 84% 0%, 90% 100%, 96% 0%, 100% 0%);
+  }
+  #receipt .receipt-title{
+    text-align:center; font-weight:bold; letter-spacing:0.06em; font-size:0.95rem;
+    border-bottom: 1px dashed rgba(107,68,87,0.35); padding-bottom:12px; margin-bottom:14px;
+  }
+  #receipt .receipt-sub{ text-align:center; font-size:0.75rem; font-style:italic; opacity:0.6; margin-top:-10px; margin-bottom:14px; }
+  #receipt .receipt-line{
+    display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:9px; gap:12px;
+  }
+  #receipt .receipt-line span:first-child{ opacity:0.6; }
+  #receipt .receipt-divider{ border-top:1px dashed rgba(107,68,87,0.35); margin:14px 0; }
+  #receipt .receipt-footer{
+    text-align:center; font-size:0.78rem; font-style:italic; opacity:0.75; line-height:1.5;
+  }
+  #save-receipt-btn{
+    width:100%; margin-top:16px;
+    background: linear-gradient(135deg, var(--plum), var(--plum-deep));
+    color:#fdf3f6; box-shadow: 0 10px 26px rgba(107,68,87,0.3); font-family:'Jost',sans-serif;
+  }
+  #save-receipt-btn:hover{ transform: scale(1.03); }
+  .receipt-hint{
+    font-size:0.78rem; opacity:0.65; margin-top:12px; text-align:center;
+  }
+
+  .burst-heart{
+    position:absolute; font-size:1.4rem; opacity:0; pointer-events:none;
+    animation: burst 1.4s ease-out forwards;
+  }
+  @keyframes burst{
+    0%{ opacity:1; transform: translate(0,0) scale(0.6); }
+    100%{ opacity:0; transform: translate(var(--bx), var(--by)) scale(1.3) rotate(var(--br)); }
+  }
+
+  footer.small{
+    position:fixed; bottom:14px; left:0; right:0; text-align:center;
+    font-size:0.7rem; letter-spacing:0.1em; color:var(--plum); opacity:0.4; z-index:6;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .petal, .arrow-down{ animation: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div id="petal-field"></div>
+
+<!-- SCENE 1 -->
+<section id="envelope-scene">
+  <div class="bunting" id="bunting"></div>
+  <div class="stars" id="stars"></div>
+  <div class="moon"></div>
+  <div id="fireflies"></div>
+
+  <div class="harana-title">Helloooo, My Lovely Babyyy Kikayyyy!!</div>
+  <div class="harana-sub">(munting handog just for you, Mahal!)</div>
+
+  <div class="hint">a letter has arrived</div>
+  <div class="envelope-wrap" id="envelope">
+    <div class="envelope">
+      <div class="flap"></div>
+      <div class="seal">✦</div>
+    </div>
+  </div>
+  <div class="hint" style="margin-top:36px;">tap to open</div>
+
+  <div class="garden" id="garden"></div>
+</section>
+
+<!-- SCENE 2 -->
+<section id="letter-scene">
+  <div class="letter-paper">
+    <p>Hello my Sweetyyy Prettyyy Cutieee <span class="serif" id="name-slot">Iris</span> ^_^ 💗✨</p>
+    <p>Wala akong idea sa mga ganito hahaha. Pero love ko—Kikay my lovely pretty baby, para sa'yo, ang lahat ay pag-aaralan ko. 🫶 I hope sa ganitong kaliit na bagay ay mapasaya kita! Hehe. (❤️ ω ❤️) </p>
+    <p>I want to remind you and to keep in your mind that I always love you no matter what. Okay? (●'◡'●)  Tulad ng sinabi ko, papanindigan ko kung ano ang problemang ito na pinasok ko, de CHAROT!</p>
+    <p>Mahal na mahal kita palagi, My Love, My Baby, My Sweetie, My Wifeyyy, My Everything, My you—Kikay. 🥰😘 I just love seeing you happy because of me. (◔◡◔) Hehe.</p>
+    <div class="scroll-note">Scroll mo bebe ko (●ˇ∀ˇ●)</div>
+    <div class="arrow-down">↓</div>
+  </div>
+</section>
+
+<!-- SCENE 3 -->
+<section id="question-scene">
+  <h1 class="serif">Will you go on a date with me? ^_^</h1>
+  <p class="sub">Bawal ang maling sagot. Hehe. Subukan mong humindi 🙄 </p>
+  <div class="btn-row">
+    <button class="btn" id="yes-btn">Oo, gustong gusto ko! (✿◠‿◠)</button>
+    <button class="btn" id="no-btn">Not this time ಥ_ಥ</button>
+  </div>
+</section>
+
+<footer class="small">made with a lot of love only for you, my babyyy! </footer>
+
+<!-- CELEBRATION -->
+<div id="celebration">
+  <h1 class="serif">CONGRATULATIONS, MY LOVE!❤️</h1>
+  <p style="opacity:0.7; margin-bottom:10px;">(Alam ko namang yan talaga isasagot mo (●ˇ∀ˇ●))</p>
+  <p>Consider this my invitation to <span class="date-idea" id="date-slot">a date, bonding, and no phones — just us.</span></p>
+  <p style="margin-top:26px; font-size:0.9rem; opacity:0.7;">Set mo na ang araw na gusto mo, Mahal ko! — I'll be there.</p>
+
+  <div id="planner">
+    <div class="planner-title">When shall we meet?</div>
+    <form id="planner-form">
+      <div class="field-group">
+        <label for="date-input">Date</label>
+        <input type="date" id="date-input" required>
+      </div>
+      <div class="field-group">
+        <label for="time-input">Time</label>
+        <input type="time" id="time-input" min="08:00" max="20:00" required>
+      </div>
+      <div class="field-group">
+      <label for="place-input">Place</label>
+      <input type="text" id="place-input" placeholder="Where do you want to go, My Bebe?" required>
+    </div>
+      <div class="planner-error" id="planner-error"> 8:00 AM to 8:00 PM lang mahal ko, wala pa tayo sasakyan HAHAHA</div>
+      <button type="submit" class="btn" id="confirm-btn">Confirm our date</button>
+      <div id="planner-success"></div>
+    </form>
+  </div>
+
+  <div id="receipt-wrap">
+    <div id="receipt">
+      <div class="receipt-title">PROOF OF OUR DATE <br>-requested by Kikay!</div>
+      <div class="receipt-sub">(Pruweba ko to, Boi)</div>
+      <div class="receipt-line"><span>Name</span><span id="receipt-name">—</span></div>
+      <div class="receipt-line"><span>Date</span><span id="receipt-date">—</span></div>
+      <div class="receipt-line"><span>Time</span><span id="receipt-time">—</span></div>
+      <div class="receipt-line"><span>Place</span><span id="receipt-place">—</span></div> 
+      <div class="receipt-line"><span>Serial No.</span><span id="receipt-serial">—</span></div>
+      <div class="receipt-divider"></div>
+      <div class="receipt-footer">Patunay na ikaw ay gustong makipagdate<br> sa akin sa araw at oras na pinili<br>mo. Lovelotssss, My Babyyy! 💗</div>
+    </div>
+    <button class="btn" id="save-receipt-btn">Save the Receipt</button>
+    <div class="receipt-hint">Pindutin ang button sa itaas para awtomatikong ma-save ang resibong ito sa iyong device.</div>
+  </div>
+</div>
+
+<audio id="song1-audio" src="songs/song1.mp3" preload="auto"></audio>
+<audio id="song2-audio" src="songs/song2.mp3" preload="auto"></audio>
+<audio id="song3-audio" src="songs/song3.mp3" preload="auto"></audio>
+
+<script>
+  // ---- personalize from CSS vars ----
+  const nameVar = getComputedStyle(document.documentElement).getPropertyValue('--her-name').trim().replace(/^"|"$/g,'');
+  const dateVar = getComputedStyle(document.documentElement).getPropertyValue('--date-idea').trim().replace(/^"|"$/g,'');
+  if(nameVar) document.getElementById('name-slot').textContent = nameVar;
+  if(dateVar) document.getElementById('date-slot').textContent = dateVar;
+  document.title = "For " + (nameVar || "You");
+
+  // ---- floating petals ----
+  const field = document.getElementById('petal-field');
+  const petalEmojis = ['🌼','❀','✿','🤍'];
+  for(let i=0;i<22;i++){
+    const p = document.createElement('div');
+    p.className='petal';
+    p.textContent = petalEmojis[Math.floor(Math.random()*petalEmojis.length)];
+    const size = 14 + Math.random()*16;
+    p.style.fontSize = size+'px';
+    p.style.left = Math.random()*100+'vw';
+    p.style.setProperty('--drift', (Math.random()*160-80)+'px');
+    const dur = 10 + Math.random()*14;
+    p.style.animationDuration = dur+'s';
+    p.style.animationDelay = (Math.random()*-dur)+'s';
+    field.appendChild(p);
+  }
+
+  // ---- falling couple photos ------------------------------------------
+  // 👉 TO ADD MORE PHOTOS: just add another filename to this list, and
+  // upload a matching image into the /photos folder next to index.html.
+  // The list can be any length — it will cycle through automatically.
+  const couplePhotos = [
+    'photos/photo1.png',
+    'photos/photo2.png',
+    'photos/photo3.png',
+    'photos/photo4.png'
+  ];
+
+  const PHOTO_COUNT_ON_SCREEN = 9;   // how many polaroids fall at once (repeats the list above)
+  const PHOTO_WIDTH_PX = 100;        // polaroid width in pixels
+  const PHOTO_HEIGHT_PX = 120;       // polaroid photo-area height in pixels
+
+  couplePhotos.forEach((src, i) => {
+    for(let copy = 0; copy < Math.ceil(PHOTO_COUNT_ON_SCREEN / couplePhotos.length); copy++){
+      const pic = document.createElement('div');
+      pic.className = 'polaroid';
+      pic.style.width = PHOTO_WIDTH_PX + 'px';
+      pic.style.left = Math.random()*90 + 'vw';
+
+      const img = document.createElement('img');
+      img.src = src;
+      img.style.height = PHOTO_HEIGHT_PX + 'px';
+      img.alt = 'us';
+      pic.appendChild(img);
+
+      pic.style.setProperty('--drift', (Math.random()*180-90)+'px');
+      pic.style.setProperty('--rot-start', (Math.random()*16-8)+'deg');
+      pic.style.setProperty('--rot-end', (Math.random()*24-12)+'deg');
+      const dur = 16 + Math.random()*10;      // slower than the little petals — easier to notice
+      pic.style.animationDuration = dur+'s';
+      pic.style.animationDelay = (Math.random()*-dur)+'s';
+      field.appendChild(pic);
+    }
+  });
+
+  // ---- harana night scene: stars ----
+  const starsField = document.getElementById('stars');
+  for(let i=0;i<40;i++){
+    const s = document.createElement('div');
+    s.className='star';
+    s.style.left = Math.random()*100+'%';
+    s.style.top = Math.random()*60+'%';
+    s.style.animationDelay = (Math.random()*3)+'s';
+    starsField.appendChild(s);
+  }
+
+  // ---- cute hanging flower bunting (replaces the old diamond capiz row) ----
+  const buntingEl = document.getElementById('bunting');
+  (function buildBunting(){
+    const w = 1000, threadLen = 22, count = 14;
+    const spacing = w / (count + 1);
+    let svg = `<svg viewBox="0 0 ${w} 86" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">`;
+    svg += `<line x1="0" y1="6" x2="${w}" y2="6" stroke="var(--capiz)" stroke-width="2" opacity="0.5"/>`;
+    const petalColors = ['var(--rose)','var(--gold)','var(--capiz)','var(--blush)'];
+    for(let i=1;i<=count;i++){
+      const cx = spacing*i;
+      const cy = 6 + threadLen;
+      const r = 8 + (i % 3)*2;
+      const color = petalColors[i % petalColors.length];
+      const delay = (i * 0.18).toFixed(2);
+      svg += `<g class="charm" style="animation-delay:${delay}s">
+        <line x1="${cx}" y1="6" x2="${cx}" y2="${cy - r}" stroke="var(--capiz)" stroke-width="1" opacity="0.5"/>
+        <g transform="translate(${cx},${cy})">
+          ${[0,72,144,216,288].map(a=>`<ellipse cx="0" cy="-${r*0.62}" rx="${r*0.42}" ry="${r*0.62}" fill="${color}" opacity="0.9" transform="rotate(${a})"/>`).join('')}
+          <circle r="${r*0.3}" fill="var(--gold)"/>
+        </g>
+      </g>`;
+    }
+    svg += `</svg>`;
+    buntingEl.innerHTML = svg;
+  })();
+
+  // ---- moonlit pink flower garden (replaces the old silhouette) ----
+  const gardenEl = document.getElementById('garden');
+  (function buildGarden(){
+    const w = 1000, h = 200, groundY = 150;
+    let svg = `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">`;
+    svg += `<path d="M0 ${groundY} Q ${w*0.25} ${groundY-26} ${w*0.5} ${groundY-8} T ${w} ${groundY-20} V ${h} H 0 Z" fill="var(--plum-deep)" opacity="0.85"/>`;
+    const flowerColors = ['var(--rose)','var(--blush)','var(--gold)','#F7B8CC'];
+    const count = 16;
+    for(let i=0;i<count;i++){
+      const x = (w/count) * i + (Math.random()*30 - 15) + 20;
+      const baseY = groundY - 10 - Math.sin(i*0.6)*14;
+      const stemH = 26 + Math.random()*22;
+      const flowerY = baseY - stemH;
+      const scale = 0.7 + Math.random()*0.6;
+      const color = flowerColors[i % flowerColors.length];
+      const delay = (Math.random()*4).toFixed(2);
+      svg += `<g class="bloom" style="animation-delay:${delay}s" transform="translate(${x},${baseY})">
+        <line x1="0" y1="0" x2="0" y2="-${stemH}" stroke="#4a7a4f" stroke-width="2.5"/>
+        <ellipse cx="-6" cy="-${stemH*0.5}" rx="7" ry="3.5" fill="#4a7a4f" transform="rotate(-25 -6 -${stemH*0.5})"/>
+        <ellipse cx="6" cy="-${stemH*0.65}" rx="7" ry="3.5" fill="#5c8a5f" transform="rotate(25 6 -${stemH*0.65})"/>
+        <g transform="translate(0,-${stemH}) scale(${scale.toFixed(2)})">
+          ${[0,72,144,216,288].map(a=>`<ellipse cx="0" cy="-8" rx="6" ry="9" fill="${color}" transform="rotate(${a})"/>`).join('')}
+          <circle r="4.5" fill="var(--gold)"/>
+        </g>
+      </g>`;
+    }
+    svg += `</svg>`;
+    gardenEl.innerHTML = svg;
+  })();
+
+  // ---- fireflies drifting above the garden ----
+  const firefliesEl = document.getElementById('fireflies');
+  for(let i=0;i<10;i++){
+    const f = document.createElement('div');
+    f.className='firefly';
+    f.style.position='absolute';
+    f.style.left = (10 + Math.random()*80)+'%';
+    f.style.bottom = (15 + Math.random()*18)+'%';
+    f.style.animationDelay = (Math.random()*5)+'s';
+    f.style.animationDuration = (5 + Math.random()*3)+'s';
+    firefliesEl.appendChild(f);
+  }
+
+  // ---- envelope open ----
+  const envelope = document.getElementById('envelope');
+  const letterScene = document.getElementById('letter-scene');
+  let scrollLockY = null;
+
+  // once she's read past the envelope, don't let her scroll back up into it —
+  // clamp instead of hiding the section, so the page height never jumps
+  window.addEventListener('scroll', () => {
+    if(scrollLockY !== null && window.scrollY < scrollLockY){
+      window.scrollTo({ top: scrollLockY, left: 0, behavior: 'auto' });
+    }
+  }, { passive: true });
+
+  envelope.addEventListener('click', async () => {
+    if(envelope.classList.contains('open')) return;
+    envelope.classList.add('open');
+
+    // song #1 begins the moment the letter opens — but if playback fails for
+    // any reason (blocked, missing file, etc.) the letter must still show
+    try{ await playSong1(); } catch(err){ console.warn('song1 failed to play:', err); }
+
+    setTimeout(()=>{
+      letterScene.classList.add('visible');
+      letterScene.scrollIntoView({behavior:'smooth'});
+      // give the smooth scroll time to actually land on the letter before locking
+      setTimeout(()=>{ scrollLockY = letterScene.offsetTop; }, 900);
+    }, 700);
+  });
+
+  // ---- dodging "no" button (kept within the question area only) ----
+  const noBtn = document.getElementById('no-btn');
+  const yesBtn = document.getElementById('yes-btn');
+  const questionScene = document.getElementById('question-scene');
+  let scale = 1;
+  function dodge(){
+    noBtn.classList.add('fixed-pos');
+    const rect = questionScene.getBoundingClientRect();
+    const w = noBtn.offsetWidth, h = noBtn.offsetHeight;
+    const edgePad = 20;
+    const minX = rect.left + edgePad;
+    const maxX = rect.right - w - edgePad;
+    const minY = rect.top + edgePad;
+    const maxY = rect.bottom - h - edgePad;
+    const x = minX + Math.random()*Math.max(maxX-minX, 10);
+    const y = minY + Math.random()*Math.max(maxY-minY, 10);
+    noBtn.style.left = x+'px';
+    noBtn.style.top = y+'px';
+
+    // little startled wobble each time she gets close
+    noBtn.classList.remove('no-pop');
+    void noBtn.offsetWidth; // restart the animation
+    noBtn.classList.add('no-pop');
+
+    scale = Math.min(scale + 0.06, 1.6);
+    yesBtn.style.transform = `scale(${scale})`;
+  }
+  noBtn.addEventListener('mouseenter', dodge);
+  noBtn.addEventListener('touchstart', (e)=>{ e.preventDefault(); dodge(); }, {passive:false});
+  noBtn.addEventListener('click', dodge);
+
+  // ---- yes -> celebration ----
+  const celebration = document.getElementById('celebration');
+  yesBtn.addEventListener('click', async () => {
+    celebration.classList.add('show');
+    burstHearts();
+    try{ await playSong2(); } catch(err){ console.warn('song2 failed to play:', err); }
+  });
+
+  // ---- date & time planner ----
+  const dateInput = document.getElementById('date-input');
+  const timeInput = document.getElementById('time-input');
+  const placeInput = document.getElementById('place-input');
+  const plannerForm = document.getElementById('planner-form');
+  const plannerError = document.getElementById('planner-error');
+  const plannerSuccess = document.getElementById('planner-success');
+  const receiptWrap = document.getElementById('receipt-wrap');
+  let receiptData = null;
+
+  // only allow future days (tomorrow onward) — today is excluded
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const minDateStr = tomorrow.toISOString().split('T')[0];
+  dateInput.min = minDateStr;
+
+  plannerForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    plannerError.classList.remove('show');
+
+    const chosenDate = dateInput.value;
+    const chosenTime = timeInput.value;
+    const chosenPlace = placeInput.value.trim();
+
+    if (!chosenDate || !chosenTime || !chosenPlace) return;
+
+    // enforce future-day-only, just in case the browser UI is bypassed
+    if (chosenDate < minDateStr) {
+      plannerError.textContent = "Please pick a day after today — I need a little time to get ready.";
+      plannerError.classList.add('show');
+      return;
+    }
+
+    // enforce 8:00 AM - 8:00 PM window
+    if (chosenTime < "08:00" || chosenTime > "20:00") {
+      plannerError.textContent = "8:00 AM to 8:00 PM lang mahal ko, wala pa tayo sasakyan HAHAHA";
+      plannerError.classList.add('show');
+      return;
+    }
+
+    const prettyDate = new Date(chosenDate + 'T00:00:00').toLocaleDateString(undefined, {
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+    });
+    const [h, m] = chosenTime.split(':').map(Number);
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    const hour12 = h % 12 === 0 ? 12 : h % 12;
+    const prettyTime = `${hour12}:${String(m).padStart(2,'0')} ${ampm}`;
+
+    plannerForm.querySelectorAll('.field-group, #confirm-btn').forEach(el => el.style.display = 'none');
+    plannerSuccess.innerHTML = `IT'S A DATE! 💌 <br> Place: ${chosenPlace}<br> YAYYYY!! lIBRE MO NA AKO!`;
+    plannerSuccess.classList.add('show');
+    burstHearts();
+
+    // patunay: reveal the date receipt
+    receiptData = {
+      name: nameVar || "Iris",
+      place: chosenPlace,
+      date: prettyDate,
+      time: prettyTime,
+      serial: 'HRN-' + Math.floor(100000 + Math.random()*900000)
+    };
+    document.getElementById('receipt-name').textContent = receiptData.name;
+    document.getElementById('receipt-place').textContent = receiptData.place;
+    document.getElementById('receipt-date').textContent = receiptData.date;
+    document.getElementById('receipt-time').textContent = receiptData.time;
+    document.getElementById('receipt-serial').textContent = receiptData.serial;
+    const receiptPlace = document.getElementById('receipt-place');
+  if (receiptPlace) receiptPlace.textContent = receiptData.place;
+    receiptWrap.classList.add('show');
+  });
+
+  // ---- save the date receipt as a downloadable image ----
+  function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight){
+    const words = text.split(' ');
+    let line = '', lines = [];
+    for(let n=0;n<words.length;n++){
+      const testLine = line + words[n] + ' ';
+      if(ctx.measureText(testLine).width > maxWidth && n>0){
+        lines.push(line);
+        line = words[n] + ' ';
+      } else {
+        line = testLine;
+      }
+    }
+    lines.push(line);
+    lines.forEach((l,i)=> ctx.fillText(l.trim(), x, y + i*lineHeight));
+    return lines.length;
+  }
+
+  document.getElementById('save-receipt-btn').addEventListener('click', function(){
+    if(!receiptData) return;
+    const w = 480, h = 640;
+    const canvas = document.createElement('canvas');
+    canvas.width = w; canvas.height = h;
+    const ctx = canvas.getContext('2d');
+
+    ctx.fillStyle = '#FFFDF8';
+    ctx.fillRect(0,0,w,h);
+
+    ctx.setLineDash([6,5]);
+    ctx.strokeStyle = 'rgba(107,68,87,0.4)';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(14,14,w-28,h-28);
+
+    ctx.fillStyle = '#3a2230';
+    ctx.textAlign = 'center';
+    ctx.font = 'bold 24px "Courier New", monospace';
+    ctx.fillText('PROOF OF OUR DATE', w/2, 66);
+    ctx.fillStyle = 'rgba(58,34,48,0.6)';
+    ctx.font = 'italic 14px "Courier New", monospace';
+    ctx.fillText('(Requesteed by Kikayyy MyLoveee!)', w/2, 88);
+
+    ctx.strokeStyle = 'rgba(107,68,87,0.4)';
+    ctx.beginPath(); ctx.moveTo(40,104); ctx.lineTo(w-40,104); ctx.stroke();
+
+    ctx.fillStyle = '#3a2230';
+    ctx.font = '17px "Courier New", monospace';
+    const rows = [
+      ['Name', receiptData.name],
+      ['Date', receiptData.date],
+      ['Time', receiptData.time],
+      ['Place', receiptData.place],
+      ['Serial No.', receiptData.serial]
+    ];
+    let y = 140;
+    rows.forEach(([label, val]) => {
+      ctx.textAlign = 'left';
+      ctx.fillText(label, 44, y);
+      ctx.textAlign = 'right';
+      ctx.fillText(val, w-44, y);
+      y += 42;
+    });
+
+    ctx.beginPath(); ctx.moveTo(40, y+6); ctx.lineTo(w-40, y+6); ctx.stroke();
+    y += 44;
+
+    ctx.setLineDash([]);
+    ctx.textAlign = 'center';
+    ctx.font = 'italic 15px "Courier New", monospace';
+    const linesUsed = wrapCanvasText(ctx, 'Patunay na ikaw ay gustong makipagdate sa akin sa araw at oras na pinili mo.', w/2, y, w-100, 22);
+    y += linesUsed * 22 + 14;
+    ctx.font = 'italic 16px "Courier New", monospace';
+    ctx.fillText('Lovelotssss, My Babyyy! 💗', w/2, y);
+
+    // jagged receipt-paper edge at the bottom
+    ctx.fillStyle = '#F6C9D6';
+    const teeth = 16, toothW = w/teeth;
+    ctx.beginPath();
+    ctx.moveTo(0, h);
+    for(let i=0;i<=teeth;i++){
+      const tx = i*toothW;
+      const ty = (i % 2 === 0) ? h-14 : h;
+      ctx.lineTo(tx, ty);
+    }
+    ctx.lineTo(w,h);
+    ctx.closePath();
+    ctx.fill();
+
+    canvas.toBlob((blob) => {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'date-receipt.png';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      const btn = document.getElementById('save-receipt-btn');
+      const original = btn.textContent;
+      btn.textContent = 'Na-save na! 💾';
+      setTimeout(()=>{ btn.textContent = original; }, 2200);
+    });
+  });
+
+  function burstHearts(){
+    for(let i=0;i<26;i++){
+      const h = document.createElement('div');
+      h.className='burst-heart';
+      h.textContent = ['💗','💕','✨','🌸'][Math.floor(Math.random()*4)];
+      h.style.left = '50%'; h.style.top = '40%';
+      const angle = Math.random()*Math.PI*2;
+      const dist = 120 + Math.random()*260;
+      h.style.setProperty('--bx', Math.cos(angle)*dist+'px');
+      h.style.setProperty('--by', Math.sin(angle)*dist+'px');
+      h.style.setProperty('--br', (Math.random()*360)+'deg');
+      h.style.animationDelay = (Math.random()*0.3)+'s';
+      celebration.appendChild(h);
+      setTimeout(()=>h.remove(), 2000);
+    }
+  }
+
+  // ---- two generative "songs" (Tone.js) ----
+  const song1Audio = document.getElementById('song1-audio');
+  const song2Audio = document.getElementById('song2-audio');
+  const song3Audio = document.getElementById('song3-audio');
+  [song1Audio, song2Audio, song3Audio].forEach((a, i) => {
+    a.addEventListener('error', () => {
+      console.error(`song${i+1} failed to load — check that songs/song${i+1}.mp3 exists at that exact path/case on the server.`, a.error);
+    });
+  });
+  let musicOn = false;
+
+  function stopAllSongs() {
+    [song1Audio, song2Audio, song3Audio].forEach(a => {
+      a.pause();
+      a.currentTime = 0;
+    });
+  }
+
+  async function playSong1() {
+    stopAllSongs();
+    await song1Audio.play();
+    musicOn = true;
+  }
+
+  async function playSong2() {
+    stopAllSongs();
+    await song2Audio.play();
+    musicOn = true;
+  }
+
+  async function playSong3() {
+    stopAllSongs();
+    await song3Audio.play();
+    musicOn = true;
+  }
+</script>
+
+</body>
+</html>
